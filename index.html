@@ -1,0 +1,60 @@
+<html>
+
+<head>
+<title>Learning WebGL &mdash; lesson 7</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="../js/gl-matrix-2.2.1.js"></script>
+<script type="text/javascript" src="../js/webgl-utils.js"></script>
+
+<script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec2 vTextureCoord;
+
+    uniform sampler2D uSampler;
+
+    uniform vec3 uColor;
+
+    void main(void) {
+        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        gl_FragColor = textureColor * vec4(uColor, 1.0);
+    }
+</script>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec2 vTextureCoord;
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vTextureCoord = aTextureCoord;
+    }
+</script>
+
+
+<script type="text/javascript" src="game.js"></script>
+</head>
+
+
+
+
+<body onload="webGLStart();">
+<center>
+    <canvas id="myCanvas" style="border: none;" width="800" height="800"></canvas>
+
+    <br/>
+    <input type="checkbox" id="twinkle" /> Twinkle<br/>
+    (Use up/down cursor keys to rotate, and <code>Page Up</code>/<code>Page Down</code> to zoom out/in)
+
+    <br/>
+    <br/>
+</center>
+</body>
+
+</html>
