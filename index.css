@@ -1,0 +1,69 @@
+body {
+	text-align: center;
+	min-width: 1024px;
+	min-height: 600px;
+	padding: 10;
+	margin: 10;
+}
+
+.all {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#WinDiv {
+	width: 1024px;
+	height: 600px;
+	z-index: 10;
+	display: none;
+}
+
+#LostDiv {
+	width: 1024px;
+	height: 600px;
+	z-index: 10;
+	display: none;
+}
+
+#IntroDiv {
+	border: 4px solid black;
+	width: 1024px;
+	height: 600px;
+	z-index: 1;
+	display: none;
+}
+
+#splashImg {
+	width: 1024;
+	height: 600px;
+}
+
+#TapStart {
+	width: 180px;
+	top: 350px;
+	left: -20px;
+}
+
+#background {
+	width: 1024;
+	height: 600px;
+	background-color: black;
+}
+
+canvas {
+	margin-top: 44px;
+	width: 1024px;
+	height: 512px;
+	border: none;
+}
+
+iframe {
+	display: none;
+}

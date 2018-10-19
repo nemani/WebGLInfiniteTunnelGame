@@ -1,0 +1,147 @@
+<html>
+<head>
+    <meta charset="utf-8">    
+    <meta http-equiv="Cache-Control" content="no-cache">
+</head>
+
+<script id="ball-quad-vs" type="x-shader/x-vertex">
+    attribute vec3 aPosition;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uPMatrix;
+    uniform mat4 uMVMatrix;
+
+    varying vec2 vTextureCoord;
+
+    void main() {
+        vec4 position = uMVMatrix * vec4(aPosition, 1.0);
+        gl_Position = uPMatrix * position;
+        vTextureCoord = aTextureCoord;
+    }
+</script>
+
+<script id="ball-quad-fs" type="x-shader/x-fragment">
+    #ifdef GL_ES
+    precision highp float;
+    precision highp sampler2D;
+    #endif
+
+    varying vec2 vTextureCoord;
+    uniform sampler2D uSampler;
+    uniform float uAmbient;
+    uniform float uTransparency;
+
+    void main() {
+        vec4 tex = texture2D(uSampler, vTextureCoord);
+        gl_FragColor = vec4(uAmbient * (vec3(0.01, 0.01, 0.01) + tex.rgb), tex.a * uTransparency);
+    }
+</script>
+
+<script id="wall-fs" type="x-shader/x-fragment">
+    #ifdef GL_ES
+    precision highp float;
+    precision highp sampler2D;
+    #endif
+
+    varying float vViewZ;
+    varying vec2 vTextureCoord;
+    varying vec3 vLightDir;
+
+    uniform sampler2D uSampler;
+
+    uniform float uAmbient;
+    uniform float uFalloff;
+    uniform float uShine;
+    uniform float uNearStrength;
+    uniform bool uGreyscale;
+
+    void main() {
+        float nearAtt = uNearStrength/(vLightDir.x * vLightDir.x + vLightDir.y * vLightDir.y + vLightDir.z * vLightDir.z);
+        float att = max(uFalloff * pow(vViewZ, 1.5), max(uAmbient, nearAtt));
+        att *= (1.0 + uShine * pow((1.0 - vTextureCoord.t), 40.0));
+        gl_FragColor = vec4(att * (vec3(0.1, 0.1, 0.1) + texture2D(uSampler, vTextureCoord).rgb), 1.0);
+        if (uGreyscale){
+            float temp = dot(vec3(0.1, 0.1, 0.1) + texture2D(uSampler, vTextureCoord).rgb, vec3(0.5, 0.5, 0.5));
+            gl_FragColor = vec4(temp, temp, temp, 1.0);
+        }
+    }
+</script>
+
+
+<script id="wall-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uPMatrix;
+    uniform mat4 uMVMatrix;
+    uniform float uTextureOffset;
+
+    varying float vViewZ;
+    varying vec2 vTextureCoord;
+    varying vec3 vLightDir;
+
+    void main() {
+        vec4 position = uMVMatrix * vec4(aVertexPosition, 1.0);
+        vViewZ = -position.z;
+
+        gl_Position = uPMatrix * position;
+        vTextureCoord = aTextureCoord + vec2(0.0, uTextureOffset);
+        vec3 lightPosition = vec3(0.0, -14.0, -50.0);
+        vLightDir = lightPosition - position.xyz;
+    }
+</script>
+
+<script id="tunnel-fs" type="x-shader/x-fragment">
+    #ifdef GL_ES
+    precision highp float;
+    precision highp sampler2D;
+    #endif
+
+    varying float vViewZ;
+    varying vec2 vTextureCoord;
+    varying vec3 vLightDir;
+
+    uniform sampler2D uSampler;
+
+    uniform float uAmbient;
+    uniform float uFalloff;
+    uniform float uNearStrength;
+    uniform bool uGreyscale;
+
+    void main() {
+        float nearAtt = uNearStrength/(vLightDir.x * vLightDir.x + vLightDir.y * vLightDir.y + vLightDir.z * vLightDir.z);
+        float att = max(uFalloff * pow(vViewZ, 1.5), max(uAmbient, nearAtt));
+        gl_FragColor = vec4(att * (vec3(0.1, 0.1, 0.1) + texture2D(uSampler, vTextureCoord).rgb), 1.0);
+        if (uGreyscale){
+            float temp = dot(vec3(0.1, 0.1, 0.1) + texture2D(uSampler, vTextureCoord).rgb, vec3(0.5, 0.5, 0.5));
+            gl_FragColor = vec4(temp, temp, temp, 1.0);
+        }
+    }
+</script>
+<script id="tunnel-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uPMatrix;
+    uniform mat4 uMVMatrix;
+    uniform float uTextureOffset;
+
+    varying float vViewZ;
+    varying vec2 vTextureCoord;
+    varying vec3 vLightDir;
+
+    void main() {
+        vec4 position = uMVMatrix * vec4(aVertexPosition, 1.0);
+        vViewZ = -position.z;
+
+        gl_Position = uPMatrix * position;
+        vTextureCoord = aTextureCoord + vec2(0.0, uTextureOffset);
+        vec3 lightPosition = vec3(0.0, -14.0, -50.0);
+        vLightDir = lightPosition - position.xyz;
+    }
+</script>
+
+
+<body></body>
+</html>
+
